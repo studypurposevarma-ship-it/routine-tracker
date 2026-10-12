@@ -86,6 +86,7 @@ h2{font-size:20px;line-height:1.15}.sub{font-size:12.5px;color:var(--muted);marg
 .mrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 8px 12px;background:var(--soft);border-radius:10px}
 .mrow span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mrow .ib{color:var(--bad);font-size:12px}
+.bk{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.bk label{position:relative}.bk input{position:absolute;opacity:0;width:1px;height:1px}.bk label:focus-within{outline:2px solid var(--a);outline-offset:2px}
 .modal{position:fixed;inset:0;background:rgba(8,6,24,.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.open{display:flex}
 .dlg{width:100%;max-width:400px;display:grid;gap:14px}
 .field{width:100%;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:11px 13px}.field:focus{outline:2px solid var(--a);border-color:transparent}
@@ -154,6 +155,12 @@ h2{font-size:20px;line-height:1.15}.sub{font-size:12.5px;color:var(--muted);marg
       <h2>Manage Habit List</h2>
       <p class="sub">Add or remove habits tracked across all days.</p>
       <div class="list" id="manage" style="max-height:240px;overflow-y:auto"></div>
+      <h2 style="font-size:16px;margin-top:22px">Backup &amp; restore</h2>
+      <p class="sub" id="bkMsg" role="status">Save a backup file now and then. You can use it to move your data to another browser or device.</p>
+      <div class="bk">
+        <button class="btn" onclick="exportData()">Backup data 💾</button>
+        <label class="btn">Restore data 📂<input type="file" accept=".json,application/json" onchange="importData(event)"></label>
+      </div>
     </section>
   </div>
 </main>
@@ -270,6 +277,31 @@ function confirmClick(b,fn){
   if(b._t){clearTimeout(b._t);b._t=0;b.classList.remove('armed');b.innerHTML=b._o;fn();return}
   b._o=b.innerHTML;b.classList.add('armed');b.textContent='Sure?';
   b._t=setTimeout(()=>{b._t=0;b.classList.remove('armed');b.innerHTML=b._o},2500);
+}
+function exportData(){
+  const data={};
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('routine_'))data[k]=localStorage.getItem(k)}}catch(e){}
+  Object.keys(mem).forEach(k=>{if(k.startsWith('routine_'))data[k]=JSON.stringify(mem[k])});
+  const a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.href=u;a.download=`routine-backup-${key(new Date())}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);
+  $('bkMsg').textContent=`Backup saved (${Object.keys(data).length} items).`;
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const data=JSON.parse(r.result),out={};
+      Object.keys(data).forEach(k=>{if(k.startsWith('routine_')){const v=data[k];out[k]=typeof v==='string'?JSON.parse(v):v}});
+      const keys=Object.keys(out);
+      if(!keys.length||('routine_habits' in out&&!Array.isArray(out.routine_habits)))throw 0;
+      keys.forEach(k=>save(k,out[k]));
+      applyTheme(load('routine_theme',null)||sysTheme());render();
+      $('bkMsg').textContent=`Restored ${keys.length} items from your backup.`;
+    }catch(err){$('bkMsg').textContent='That file is not a valid backup, so nothing was changed.'}
+    e.target.value='';
+  };
+  r.readAsText(f);
 }
 function applyTheme(t){document.documentElement.dataset.theme=t;$('theme').textContent=t==='dark'?'☀️':'🌙'}
 const sysTheme=()=>matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
