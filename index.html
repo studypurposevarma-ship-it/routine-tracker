@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DayBoard – daily activity, journal and to-do dashboard</title>
 <style>
@@ -11,7 +13,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 20px;
 h1{font-size:19px;margin:0 6px 0 0}h2{font-size:16px;margin:0}.sp{flex:1}.mu{color:var(--mu)}
 .b{font:inherit;font-size:14px;padding:7px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);cursor:pointer;transition:border-color .15s,background .15s}
 .b:hover:not(:disabled){border-color:var(--ac)}.b:disabled{opacity:.35;cursor:default}
-.b:focus-visible,.dy:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.b:focus-visible,.dy:focus-visible,.textlink:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
 .pr{background:var(--ac);border-color:var(--ac);color:var(--on)}.sm{padding:3px 8px;font-size:13px}
 main{max-width:1180px;margin:0 auto;padding:16px;display:grid;gap:16px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
@@ -24,25 +26,30 @@ main{max-width:1180px;margin:0 auto;padding:16px;display:grid;gap:16px}
 .st div{background:var(--bg);border-radius:10px;padding:8px 12px}.st b{display:block;font-size:20px}.st span{font-size:12px;color:var(--mu)}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}.cg i{font-style:normal;font-size:12px;color:var(--mu)}
 .dy{aspect-ratio:1;border:1px solid transparent;border-radius:9px;background:none;color:var(--tx);font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0}
-.dy:hover{background:var(--acs)}.dy.td{border-color:var(--ac);font-weight:700}.dy.sel{background:var(--ac);color:var(--on)}
-u{display:flex;gap:3px;height:6px}em{width:6px;height:6px;border-radius:50%;display:inline-block}
-.da{background:var(--ac)}.dc{background:var(--ok)}.sel .da{background:var(--on)}.sel .dc{background:#86efac}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.lg{font-size:12px;color:var(--mu);margin-top:8px}
+.dy:hover{background:var(--acs)}.dy.td{border-color:var(--ac);font-weight:700}.dy.sel{background:var(--ac);color:var(--on)}.dy.has-reminder{box-shadow:inset 0 0 0 1.5px #f59e0b}
+u{display:flex;gap:3px;height:6px}
+em{width:6px;height:6px;border-radius:50%;display:inline-block;flex:0 0 6px}
+.da{background:var(--ac)}.dc{background:var(--ok)}.de{background:#f59e0b}.sel .da{background:var(--on)}.sel .dc{background:#86efac}.sel .de{background:#fbbf24}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.lg{font-size:12px;color:var(--mu);margin-top:8px;line-height:1.8}.lg em{vertical-align:middle;margin-right:3px}
 .it{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;padding:10px;border:1px solid var(--bd);border-radius:10px;margin-bottom:8px}
 .it .m{flex:1 1 120px;min-width:0}.it p{margin:2px 0 0;color:var(--mu);font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
-.it.dn .t,.it.off .t{color:var(--mu)}.it.dn .t{text-decoration:line-through}.it.dn{opacity:.75}
+.it.dn .t,.it.off .t{color:var(--mu)}.it.dn .t{text-decoration:line-through}.it.dn{opacity:.78}
 input[type=checkbox]{width:18px;height:18px;margin:3px 0 0;accent-color:var(--ac)}
-.bg{font-size:11px;padding:1px 8px;border-radius:99px;background:hsl(var(--h) 70% 50%/.16);color:hsl(var(--h) 60% var(--bl));white-space:nowrap}
+.bg{font-size:11px;padding:1px 8px;border-radius:99px;background:hsl(var(--h) 70% 50%/.16);color:hsl(var(--h) 60% var(--bl));white-space:nowrap;display:inline-block}
 .pb{height:8px;background:var(--bg);border-radius:9px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ac2);transition:width .3s}
 .tb{display:flex;gap:4px;margin:12px 0}.tb button{font:inherit;font-size:13px;padding:4px 12px;border:1px solid var(--bd);border-radius:99px;background:none;color:var(--mu);cursor:pointer}
 .tb .on{background:var(--acs);color:var(--ac);border-color:var(--ac)}
+.textlink{font:inherit;font-weight:650;text-align:left;border:0;background:none;color:var(--tx);padding:0;cursor:pointer}.textlink:hover{color:var(--ac)}
+.rem-list{max-height:360px;overflow:auto;padding-right:2px}.rem-date{font-size:12px;color:var(--mu);margin-top:2px}.rem-help{font-size:12px;color:var(--mu);margin:8px 0 0}
 dialog{border:1px solid var(--bd);border-radius:14px;padding:20px;width:min(440px,92vw);background:var(--card);color:var(--tx)}
 dialog::backdrop{background:rgba(0,0,0,.45)}dialog h3{margin:0 0 12px}
 label{display:block;font-size:13px;color:var(--mu);margin-bottom:10px}
 dialog input,dialog select,dialog textarea{display:block;width:100%;margin-top:4px;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px}
 .bt{display:flex;justify-content:flex-end;gap:8px}.er{color:#dc2626;margin:0 0 8px;min-height:1em;font-size:13px}
 footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:var(--mu)}
-</style></head><body>
+</style>
+</head>
+<body>
 <header><h1>DayBoard</h1><span class="mu" id="now"></span><span class="sp"></span>
 <button class="b" data-a="today">Today</button><button class="b" data-a="theme">Light / dark</button>
 <button class="b" data-a="export">Export</button><button class="b" data-a="pick">Import</button>
@@ -50,10 +57,16 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:v
 <main>
 <section class="card" id="ov"></section>
 <div class="grid">
-<aside><div class="card" id="cal"></div><div class="card" id="rt"></div></aside>
+<aside>
+  <div class="card" id="cal"></div>
+  <div class="card" id="reminders"></div>
+  <div class="card" id="consistency"></div>
+  <div class="card" id="rt"></div>
+</aside>
 <div class="col"><div class="card" id="act"></div><div class="card" id="td"></div></div>
-</div></main>
-<footer>Your data is saved in this browser's localStorage only. It is not synced between devices or browsers, and clearing site data deletes it. Use Export regularly to keep a backup.</footer>
+</div>
+</main>
+<footer>Your data is saved in this browser's localStorage only. It is not synced between devices or browsers, and clearing site data deletes it. Use Export regularly to keep a backup. Daily routine entries belong only to their selected date; consistency habits keep separate completion records for each date.</footer>
 <dialog id="dlg"><form id="fm"></form></dialog>
 <script>
 /* ---------- Helpers ---------- */
@@ -62,82 +75,134 @@ const DEFCATS=['Academics','Programming','Projects','Classes and Lectures','Pers
 const PH={Low:150,Medium:40,High:0};
 const $=s=>document.querySelector(s), dlg=$('#dlg');
 const pad=n=>String(n).padStart(2,'0');
-const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;   // local date key, never UTC
+const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const parse=k=>{const[a,b,c]=k.split('-').map(Number);return new Date(a,b-1,c)};
 const yest=()=>{const d=new Date();d.setDate(d.getDate()-1);return ymd(d)};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DATE=/^\d{4}-\d{2}-\d{2}$/;
+const TODAY=()=>ymd(new Date());
 
-/* ---------- Data model & storage ----------
- S = { v, theme, categories:[], routine:[{id,title,from,to,gone}],
-       days:{ 'YYYY-MM-DD': { activities:[{id,title,cat,desc,time}], tasks:[{id,title,done,pri,desc}], rd:{routineId:1} } } }
- Routine templates live in S.routine; per-date completion lives in days[date].rd, so they never overwrite each other. */
-function fresh(){const t=ymd(new Date());return{v:1,theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light',categories:[...DEFCATS],
- routine:['Review lecture notes','Practise programming','Read or learn something new','Exercise','Plan tomorrow'].map(title=>({id:uid(),title,from:t,to:null})),days:{}}}
-function valid(o){return !!o&&typeof o==='object'&&Array.isArray(o.routine)&&!!o.days&&typeof o.days==='object'&&!Array.isArray(o.days)&&
- Object.entries(o.days).every(([k,d])=>DATE.test(k)&&d&&typeof d==='object')}
-function norm(o){const ok=x=>x&&typeof x.title==='string'&&typeof x.id==='string',arr=a=>Array.isArray(a)?a:[];
- o.v=1;o.theme=o.theme==='dark'?'dark':'light';
+/* ---------- Data model & migration ----------
+  Routine entries are stored inside days[date].routine, so adding or editing one date
+  never changes another. Consistency habit definitions are global, while their done
+  states are stored per date. Reminders are independent events and can repeat yearly. */
+function fresh(){return{v:2,theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light',categories:[...DEFCATS],
+ consistencyHabits:[{id:uid(),title:'Pushups'},{id:uid(),title:'No social media'}],reminders:[],days:{}}}
+function valid(o){return !!o&&typeof o==='object'&&(Array.isArray(o.routine)||Array.isArray(o.consistencyHabits))&&
+ !!o.days&&typeof o.days==='object'&&!Array.isArray(o.days)&&Object.entries(o.days).every(([k,d])=>DATE.test(k)&&d&&typeof d==='object')}
+function norm(o){
+ const ok=x=>x&&typeof x.title==='string'&&typeof x.id==='string',arr=a=>Array.isArray(a)?a:[];
+ const legacy=!Array.isArray(o.consistencyHabits);
+ const oldRoutine=arr(o.routine).filter(r=>ok(r)&&DATE.test(r.from));
+ o.v=2;o.theme=o.theme==='dark'?'dark':'light';
  o.categories=[...new Set(arr(o.categories).filter(c=>typeof c==='string'&&c.trim()).concat(DEFCATS))];
- o.routine=o.routine.filter(r=>ok(r)&&DATE.test(r.from)).map(r=>({...r,to:r.to||null}));
- for(const d of Object.values(o.days)){d.activities=arr(d.activities).filter(ok).map(a=>({...a,cat:a.cat||'Other'}));
-  d.tasks=arr(d.tasks).filter(ok);d.rd=d.rd&&typeof d.rd==='object'?d.rd:{};
-  d.activities.forEach(a=>{if(!o.categories.includes(a.cat))o.categories.push(a.cat)})}
- return o}
+ if(legacy){
+  o.consistencyHabits=[{id:uid(),title:'Pushups'},{id:uid(),title:'No social media'}];
+  // Preserve existing routine items on dates that already had records, plus today only.
+  const keys=new Set([...Object.keys(o.days),TODAY()]);
+  for(const k of keys){
+   const d=o.days[k]||(o.days[k]={activities:[],tasks:[]});
+   const rd=d.rd&&typeof d.rd==='object'?d.rd:{};
+   const applicable=oldRoutine.filter(r=>(!r.gone&&k>=r.from&&(!r.to||k<=r.to))||Object.prototype.hasOwnProperty.call(rd,r.id));
+   d.routine=applicable.map(r=>({id:uid(),title:r.title,done:!!rd[r.id]}));
+  }
+ }
+ o.consistencyHabits=arr(o.consistencyHabits).filter(ok).map(h=>({id:h.id,title:h.title.trim()})).filter(h=>h.title);
+ o.reminders=arr(o.reminders).filter(r=>ok(r)&&DATE.test(r.date)).map(r=>({id:r.id,title:r.title.trim(),date:r.date,type:typeof r.type==='string'&&r.type?r.type:'Other',desc:typeof r.desc==='string'?r.desc:'',repeat:r.repeat==='Yearly'?'Yearly':'None'})).filter(r=>r.title);
+ for(const [k,d] of Object.entries(o.days)){
+  d.activities=arr(d.activities).filter(ok).map(a=>({...a,cat:a.cat||'Other',desc:typeof a.desc==='string'?a.desc:'',time:typeof a.time==='string'?a.time:''}));
+  d.tasks=arr(d.tasks).filter(ok).map(t=>({...t,done:!!t.done}));
+  d.routine=arr(d.routine).filter(ok).map(r=>({...r,done:!!r.done}));
+  d.consistency=d.consistency&&typeof d.consistency==='object'&&!Array.isArray(d.consistency)?d.consistency:{};
+  d.activities.forEach(a=>{if(!o.categories.includes(a.cat))o.categories.push(a.cat)});
+  delete d.rd;
+ }
+ delete o.routine;
+ return o;
+}
 function load(){let raw=null;try{raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(valid(o))return norm(o);throw 0}}
- catch(e){try{localStorage.setItem(KEY+'.corrupt',raw)}catch(_){}}   // keep unreadable data instead of destroying it
+ catch(e){try{if(raw)localStorage.setItem(KEY+'.corrupt',raw)}catch(_){}}
  return fresh()}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){alert('Could not save: browser storage is full or blocked. Export your data now.')}};
-let S=load(),sel=ymd(new Date()),view=parse(sel),flt='all';view.setDate(1);
-
-const day=k=>S.days[k]||(S.days[k]={activities:[],tasks:[],rd:{}});          // create only when writing
-const rtFor=k=>S.routine.filter(r=>(k>=r.from&&(!r.to||k<=r.to))||(S.days[k]&&S.days[k].rd[r.id]));
-function items(k){const d=S.days[k]||{tasks:[],rd:{}};
- return rtFor(k).map(r=>({id:r.id,title:r.title,rt:1,done:!!d.rd[r.id]})).concat(d.tasks.map(t=>({...t,done:!!t.done})))}
+let S=load(),sel=TODAY(),view=parse(sel),flt='all';view.setDate(1);
+const day=k=>S.days[k]||(S.days[k]={activities:[],tasks:[],routine:[],consistency:{}});
 const hue=c=>(Math.max(0,S.categories.indexOf(c))*47+235)%360;
-const btns=(t,id)=>`<button class="b sm" data-a="edit${t}" data-id="${id}">Edit</button><button class="b sm" data-a="del${t}" data-id="${id}">Delete</button>`;
+const btns=(t,id)=>`<button class="b sm" data-a="edit${t}" data-id="${esc(id)}">Edit</button><button class="b sm" data-a="del${t}" data-id="${esc(id)}">Delete</button>`;
 const commit=()=>{save();render()};
 
+/* ---------- Reminder date helpers ---------- */
+function annualKey(date,year){const [m,d]=date.slice(5).split('-').map(Number),x=new Date(year,m-1,d);return x.getFullYear()===year&&x.getMonth()===m-1&&x.getDate()===d?ymd(x):null}
+function reminderDate(r,base=TODAY()){
+ if(r.repeat!=='Yearly')return r.date;
+ const start=Math.max(Number(base.slice(0,4)),Number(r.date.slice(0,4)));
+ for(let y=start;y<=start+8;y++){const k=annualKey(r.date,y);if(k&&k>=base&&k>=r.date)return k}
+ return r.date;
+}
+function hasReminder(k){return S.reminders.some(r=>r.repeat==='Yearly'?(k>=r.date&&annualKey(r.date,Number(k.slice(0,4)))===k):r.date===k)}
+function remindersFor(k){return S.reminders.filter(r=>r.repeat==='Yearly'?(k>=r.date&&annualKey(r.date,Number(k.slice(0,4)))===k):r.date===k)}
+const REM_HUE={'Birthday':330,'Assignment deadline':25,'Exam':5,'Event':160,'Other':205};
+
 /* ---------- Rendering ---------- */
-function render(){document.documentElement.dataset.theme=S.theme;renderCal();renderOv();renderAct();renderTd();renderRt()}
-function renderCal(){const y=view.getFullYear(),m=view.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),t=ymd(new Date());
+function render(){document.documentElement.dataset.theme=S.theme;renderCal();renderOv();renderAct();renderTd();renderRt();renderConsistency();renderReminders()}
+function renderCal(){const y=view.getFullYear(),m=view.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),t=TODAY();
  let h=`<div class="ch"><button class="b sm" data-a="pm" aria-label="Previous month">‹</button><b>${view.toLocaleString('en',{month:'long'})} ${y}</b><button class="b sm" data-a="nm" aria-label="Next month">›</button></div><div class="cg">`+[...'SMTWTFS'].map(d=>`<i>${d}</i>`).join('');
  for(let i=0;i<first;i++)h+='<span></span>';
- for(let d=1;d<=n;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`,o=S.days[k],a=o&&o.activities.length,c=o&&(o.tasks.some(x=>x.done)||Object.keys(o.rd).length);
-  h+=`<button class="dy${k===t?' td':''}${k===sel?' sel':''}" data-k="${k}" aria-label="${k}">${d}<u>${a?'<em class="da"></em>':''}${c?'<em class="dc"></em>':''}</u></button>`}
- $('#cal').innerHTML=h+'</div><div class="lg"><em class="da"></em> activity logged &nbsp; <em class="dc"></em> task completed &nbsp; outlined = today</div>'}
-function renderOv(){const t=ymd(new Date()),d=S.days[sel],na=d?d.activities.length:0,it=items(sel),n=it.length,dn=it.filter(x=>x.done).length;
+ for(let d=1;d<=n;d++){
+  const k=`${y}-${pad(m+1)}-${pad(d)}`,o=S.days[k],a=!!(o&&o.activities&&o.activities.length);
+  const done=!!(o&&((o.tasks||[]).some(x=>x.done)||(o.routine||[]).some(x=>x.done)||Object.values(o.consistency||{}).some(Boolean)));
+  const rem=hasReminder(k);
+  h+=`<button class="dy${k===t?' td':''}${k===sel?' sel':''}${rem?' has-reminder':''}" data-k="${k}" aria-label="${k}${rem?' — reminder date':''}">${d}<u>${a?'<em class="da"></em>':''}${done?'<em class="dc"></em>':''}${rem?'<em class="de"></em>':''}</u></button>`
+ }
+ $('#cal').innerHTML=h+'</div><div class="lg"><em class="da"></em> activity logged &nbsp; <em class="dc"></em> habit/task completed<br><em class="de"></em> reminder date &nbsp; outlined = today</div>'
+}
+function renderOv(){const t=TODAY(),d=S.days[sel]||{},na=(d.activities||[]).length,tasks=d.tasks||[],routine=d.routine||[],habits=S.consistencyHabits;
+ const nHab=habits.filter(h=>(d.consistency||{})[h.id]).length,rem=remindersFor(sel).length;
  $('#ov').innerHTML=`<h2 class="big">${parse(sel).toLocaleDateString('en',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</h2>
- <span class="mu">${sel===t?'Today':sel<t?'Past day':'Upcoming day'}${na||n?'':' · no records yet'}</span>
- <div class="st">${[['Activities',na],['Tasks',n],['Completed',n?dn:'–'],['Pending',n?n-dn:'–'],['Completion',n?Math.round(dn/n*100)+'%':'–']].map(([l,v])=>`<div><b>${v}</b><span>${l}</span></div>`).join('')}</div>`}
+ <span class="mu">${sel===t?'Today':sel<t?'Past day':'Upcoming day'}${na||tasks.length||routine.length||nHab||rem?'':' · no records yet'}</span>
+ <div class="st">${[['Activities',na],['To-do tasks',tasks.length],['Routine',`${routine.filter(x=>x.done).length}/${routine.length}`],['Consistency',`${nHab}/${habits.length}`],['Reminders',rem]].map(([l,v])=>`<div><b>${v}</b><span>${l}</span></div>`).join('')}</div>`
+}
 function renderAct(){const L=(S.days[sel]||{}).activities||[];
  $('#act').innerHTML=`<div class="hd"><h2>Activity journal</h2><button class="b pr" data-a="addAct">+ Add Activity</button></div>`+
  (L.length?L.map(a=>`<div class="it"><div class="m"><b class="t">${esc(a.title)}</b> <span class="bg" style="--h:${hue(a.cat)}">${esc(a.cat)}</span>${a.time?` <span class="mu">${esc(a.time)}</span>`:''}${a.desc?`<p>${esc(a.desc)}</p>`:''}</div>${btns('Act',a.id)}</div>`).join(''):'<p class="mu">Nothing logged for this date. Add an activity to record what you did.</p>')}
-function renderTd(){const all=items(sel),n=all.length,dn=all.filter(x=>x.done).length,L=all.filter(x=>flt==='all'||(flt==='done')===x.done);
+function renderTd(){const all=(S.days[sel]||{}).tasks||[],n=all.length,dn=all.filter(x=>x.done).length,L=all.filter(x=>flt==='all'||(flt==='done')===x.done);
  $('#td').innerHTML=`<div class="hd"><h2>To-do list</h2><button class="b pr" data-a="addTask">+ Add Task</button></div>
  <div class="hd" style="margin-bottom:6px"><span>${dn}/${n} completed</span><span class="mu">${n?Math.round(dn/n*100):0}%</span></div><div class="pb"><i style="width:${n?dn/n*100:0}%"></i></div>
  <div class="tb">${[['all','All'],['pending','Pending'],['done','Completed']].map(([f,l])=>`<button class="${flt===f?'on':''}" data-a="flt" data-f="${f}">${l}</button>`).join('')}</div>`+
- (L.length?L.map(t=>`<div class="it${t.done?' dn':''}"><input type="checkbox" ${t.done?'checked':''} data-c="tgl" data-id="${t.id}" data-rt="${t.rt?1:0}" aria-label="Mark complete"><div class="m"><span class="t">${esc(t.title)}</span> ${t.rt?'<span class="bg" style="--h:200">Routine</span>':''}${t.pri?` <span class="bg" style="--h:${PH[t.pri]}">${esc(t.pri)}</span>`:''}${t.desc?`<p>${esc(t.desc)}</p>`:''}</div>${t.rt?'':btns('Task',t.id)}</div>`).join(''):`<p class="mu">${n?'No tasks match this filter.':'No tasks for this date. Add one, or enable routine tasks below.'}</p>`)}
-function renderRt(){const L=S.routine.filter(r=>!r.gone);
+ (L.length?L.map(t=>`<div class="it${t.done?' dn':''}"><input type="checkbox" ${t.done?'checked':''} data-c="tgl" data-id="${esc(t.id)}" aria-label="Mark complete"><div class="m"><span class="t">${esc(t.title)}</span>${t.pri?` <span class="bg" style="--h:${PH[t.pri]??200}">${esc(t.pri)}</span>`:''}${t.desc?`<p>${esc(t.desc)}</p>`:''}</div>${btns('Task',t.id)}</div>`).join(''):`<p class="mu">${n?'No tasks match this filter.':'No to-do tasks for this date. Add one when needed.'}</p>`)}
+function renderRt(){const L=((S.days[sel]||{}).routine)||[],done=L.filter(r=>r.done).length;
  $('#rt').innerHTML=`<div class="hd"><h2>Daily routine</h2><button class="b pr" data-a="addR">+ Add</button></div>`+
- (L.length?L.map((r,i)=>`<div class="it${r.to?' off':''}"><input type="checkbox" ${r.to?'':'checked'} data-c="rtg" data-id="${r.id}" aria-label="Enabled" title="Enabled"><div class="m"><span class="t">${esc(r.title)}</span></div>
- <button class="b sm" data-a="upR" data-id="${r.id}" ${i?'':'disabled'} aria-label="Move up">↑</button><button class="b sm" data-a="dnR" data-id="${r.id}" ${i<L.length-1?'':'disabled'} aria-label="Move down">↓</button>
- <button class="b sm" data-a="editR" data-id="${r.id}">Edit</button><button class="b sm" data-a="delR" data-id="${r.id}" aria-label="Remove">✕</button></div>`).join(''):'<p class="mu">No recurring tasks yet.</p>')+
- '<p class="mu" style="font-size:12px;margin:8px 0 0">Enabled tasks appear on every date from today onward. Each date keeps its own completion state. Disabling or removing a task never erases past records. Renaming applies to all dates.</p>'}
+ (L.length?`<div class="hd" style="margin-bottom:6px"><span>${done}/${L.length} completed</span><span class="mu">${Math.round(done/L.length*100)}%</span></div><div class="pb" style="margin-bottom:10px"><i style="width:${done/L.length*100}%"></i></div>`:'')+
+ (L.length?L.map(r=>`<div class="it${r.done?' dn':''}"><input type="checkbox" ${r.done?'checked':''} data-c="routineToggle" data-id="${esc(r.id)}" aria-label="Mark routine item complete"><div class="m"><span class="t">${esc(r.title)}</span></div>${btns('Routine',r.id)}</div>`).join(''):'<p class="mu">No routine items for this date yet. Add the activities you want to follow today; they will not appear on other dates automatically.</p>')+
+ '<p class="rem-help">Each date has its own routine list. Add, edit, or remove items without changing other days.</p>'}
+function renderConsistency(){const L=S.consistencyHabits,d=S.days[sel]||{},states=d.consistency||{},done=L.filter(h=>states[h.id]).length;
+ $('#consistency').innerHTML=`<div class="hd"><h2>Consistency</h2><button class="b pr" data-a="addHabit">+ Add</button></div>`+
+ (L.length?`<div class="hd" style="margin-bottom:6px"><span>${done}/${L.length} completed</span><span class="mu">${Math.round(done/L.length*100)}%</span></div><div class="pb" style="margin-bottom:10px"><i style="width:${done/L.length*100}%"></i></div>`:'<p class="mu">Add habits you want to track every day.</p>')+
+ (L.length?L.map(h=>`<div class="it${states[h.id]?' dn':''}"><input type="checkbox" ${states[h.id]?'checked':''} data-c="habitToggle" data-id="${esc(h.id)}" aria-label="Mark ${esc(h.title)} complete"><div class="m"><span class="t">${esc(h.title)}</span></div>${btns('Habit',h.id)}</div>`).join(''):'')+
+ '<p class="rem-help">Your habit list is shared across dates, but completion is tracked separately for each date.</p>'}
+function renderReminders(){const today=TODAY();
+ const list=[...S.reminders].sort((a,b)=>{
+  const ap=a.repeat!=='Yearly'&&a.date<today?1:0,bp=b.repeat!=='Yearly'&&b.date<today?1:0;
+  if(ap!==bp)return ap-bp;
+  return reminderDate(a,today).localeCompare(reminderDate(b,today));
+ });
+ $('#reminders').innerHTML=`<div class="hd"><h2>Reminders</h2><button class="b pr" data-a="addReminder">+ Add</button></div>`+
+ (list.length?`<div class="rem-list">${list.map(r=>{const k=reminderDate(r,today),overdue=r.repeat!=='Yearly'&&r.date<today;return `<div class="it"><div class="m"><button class="textlink" data-a="jumpReminder" data-id="${esc(r.id)}">${esc(r.title)}</button><div class="rem-date">${parse(k).toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short',year:'numeric'})}${r.repeat==='Yearly'?' · repeats yearly':''}${overdue?' · past date':''}</div><span class="bg" style="--h:${REM_HUE[r.type]??205}">${esc(r.type||'Other')}</span>${r.desc?`<p>${esc(r.desc)}</p>`:''}</div>${btns('Reminder',r.id)}</div>`}).join('')}</div>`:'<p class="mu">No reminders yet. Add birthdays, assignment deadlines, exams, or other important dates.</p>')+
+ '<p class="rem-help">Dates with reminders are marked in orange on the calendar. Choose “Yearly” for birthdays or annual events.</p>'}
 
 /* ---------- Generic modal form ---------- */
 function form(title,fields,cb){const f=$('#fm');
  f.innerHTML=`<h3>${title}</h3>`+fields.map(x=>`<label>${x.l}${x.req?' *':''}`+
   (x.t==='area'?`<textarea name="${x.k}" rows="3" maxlength="${x.m||500}">${esc(x.v||'')}</textarea>`:
    x.t==='sel'?`<select name="${x.k}">${x.o.map(o=>`<option${o===x.v?' selected':''}>${esc(o)}</option>`).join('')}</select>`:
-   `<input name="${x.k}" value="${esc(x.v||'')}" maxlength="${x.m||120}" placeholder="${esc(x.p||'')}"${x.req?' required':''}>`)+'</label>').join('')+
-  '<p class="er" id="er"></p><div class="bt"><button type="button" class="b" data-a="cancel">Cancel</button><button class="b pr">Save</button></div>';
+   `<input type="${x.t==='date'?'date':'text'}" name="${x.k}" value="${esc(x.v||'')}" ${x.t==='date'?'':'maxlength="'+(x.m||120)+'" placeholder="'+esc(x.p||'')+'"'}${x.req?' required':''}>`)+'</label>').join('')+
+  '<p class="er" id="er"></p><div class="bt"><button type="button" class="b" data-a="cancel">Cancel</button><button class="b pr" type="submit">Save</button></div>';
  const cs=f.querySelector('[name=cat]');
  if(cs)cs.onchange=()=>{if(cs.value!==NEWC)return;const n=(prompt('New category name')||'').trim().slice(0,40);
   if(n&&!S.categories.includes(n)){S.categories.push(n);save();cs.insertBefore(new Option(n,n),cs.lastChild);cs.value=n}else if(n)cs.value=n;else cs.selectedIndex=0};
  f.onsubmit=e=>{e.preventDefault();const v=Object.fromEntries(new FormData(f));for(const k in v)v[k]=v[k].trim();
   for(const x of fields)if(x.req&&!v[x.k]){$('#er').textContent=`${x.l} is required.`;return}
+  if(v.date&&!DATE.test(v.date)){$('#er').textContent='Please choose a valid date.';return}
   dlg.close();cb(v)};
  dlg.showModal()}
 function actForm(id){const k=sel,a=((S.days[k]||{}).activities||[]).find(x=>x.id===id)||{};
@@ -148,23 +213,32 @@ function actForm(id){const k=sel,a=((S.days[k]||{}).activities||[]).find(x=>x.id
 function taskForm(id){const k=sel,t=(day(k).tasks).find(x=>x.id===id)||{};
  form(id?'Edit task':'Add task',[{k:'title',l:'Task title',req:1,v:t.title},{k:'pri',l:'Priority (optional)',t:'sel',o:['None','Low','Medium','High'],v:t.pri||'None'},{k:'desc',l:'Short description (optional)',t:'area',v:t.desc,m:300}],
   v=>{v.pri=v.pri==='None'?'':v.pri;const L=day(k).tasks,o=L.find(x=>x.id===id);if(o)Object.assign(o,v);else L.push({id:uid(),done:false,...v});commit()})}
-function mv(id,dir){const v=S.routine.filter(r=>!r.gone),i=v.findIndex(r=>r.id===id),j=i+dir;if(i<0||j<0||j>=v.length)return;
- const a=S.routine.indexOf(v[i]),b=S.routine.indexOf(v[j]);[S.routine[a],S.routine[b]]=[S.routine[b],S.routine[a]];commit()}
-const rOf=id=>S.routine.find(r=>r.id===id);
+function routineForm(id){const k=sel,L=day(k).routine,r=L.find(x=>x.id===id)||{};
+ form(id?'Edit routine item':'Add routine item',[{k:'title',l:'Routine item',req:1,v:r.title,p:'e.g. Revise lecture notes'}],
+  v=>{const current=day(k).routine,o=current.find(x=>x.id===id);if(o)o.title=v.title;else current.push({id:uid(),title:v.title,done:false});commit()})}
+function habitForm(id){const h=S.consistencyHabits.find(x=>x.id===id)||{};
+ form(id?'Edit consistency habit':'Add consistency habit',[{k:'title',l:'Habit name',req:1,v:h.title,p:'e.g. Read for 20 minutes'}],
+  v=>{const o=S.consistencyHabits.find(x=>x.id===id);if(o)o.title=v.title;else S.consistencyHabits.push({id:uid(),title:v.title});commit()})}
+function reminderForm(id){const r=S.reminders.find(x=>x.id===id)||{};
+ form(id?'Edit reminder':'Add reminder',[{k:'title',l:'Reminder title',req:1,v:r.title,p:'e.g. Submit Signals and Systems assignment'},
+  {k:'date',l:'Date',t:'date',req:1,v:r.date||sel},{k:'type',l:'Type',t:'sel',o:['Birthday','Assignment deadline','Exam','Event','Other'],v:r.type||'Other'},
+  {k:'repeat',l:'Repeat',t:'sel',o:['None','Yearly'],v:r.repeat==='Yearly'?'Yearly':'None'},
+  {k:'desc',l:'Notes (optional)',t:'area',v:r.desc,m:300}],
+  v=>{const obj={...v,repeat:v.repeat==='Yearly'?'Yearly':'None'},o=S.reminders.find(x=>x.id===id);if(o)Object.assign(o,obj);else S.reminders.push({id:uid(),...obj});commit()})}
 
 /* ---------- Export / import ---------- */
 function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));
- a.download=`dayboard-backup-${ymd(new Date())}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+ a.download=`dayboard-backup-${TODAY()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
 $('#imp').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;let o;
- try{o=JSON.parse(await f.text());if(!valid(o))throw 0;norm(o)}catch(_){return alert('Import failed: this is not a valid DayBoard backup. Nothing was changed.')}
- if(!confirm(`Import "${f.name}"?\n\nBackup: ${Object.keys(o.days).length} day(s), ${o.routine.length} routine task(s).\nCurrent: ${Object.keys(S.days).length} day(s), ${S.routine.length} routine task(s).\n\nThis REPLACES all current data. Export first if you want to keep it.`))return;
- S=o;save();sel=ymd(new Date());view=parse(sel);view.setDate(1);render()};
+ try{o=JSON.parse(await f.text());if(!valid(o))throw 0;o=norm(o)}catch(_){return alert('Import failed: this is not a valid DayBoard backup. Nothing was changed.')}
+ if(!confirm(`Import "${f.name}"?\n\nBackup: ${Object.keys(o.days).length} day(s), ${(o.consistencyHabits||[]).length} consistency habit(s), ${(o.reminders||[]).length} reminder(s).\nCurrent: ${Object.keys(S.days).length} day(s), ${S.consistencyHabits.length} consistency habit(s), ${S.reminders.length} reminder(s).\n\nThis REPLACES all current data. Export first if you want to keep it.`))return;
+ S=o;save();sel=TODAY();view=parse(sel);view.setDate(1);render()};
 
-/* ---------- Actions (clicks use data-a, checkboxes use data-c) ---------- */
+/* ---------- Actions ---------- */
 const A={
  pm(){view=new Date(view.getFullYear(),view.getMonth()-1,1);renderCal()},
  nm(){view=new Date(view.getFullYear(),view.getMonth()+1,1);renderCal()},
- today(){sel=ymd(new Date());view=parse(sel);view.setDate(1);render()},
+ today(){sel=TODAY();view=parse(sel);view.setDate(1);render()},
  theme(){S.theme=S.theme==='dark'?'light':'dark';commit()},
  export:exp,pick(){$('#imp').click()},cancel(){dlg.close()},
  flt(d){flt=d.f;renderTd()},
@@ -172,13 +246,16 @@ const A={
  delAct(d){if(confirm('Delete this activity?')){const x=day(sel);x.activities=x.activities.filter(a=>a.id!==d.id);commit()}},
  addTask(){taskForm()},editTask(d){taskForm(d.id)},
  delTask(d){if(confirm('Delete this task?')){const x=day(sel);x.tasks=x.tasks.filter(t=>t.id!==d.id);commit()}},
- tgl(el){const x=day(sel),id=el.dataset.id;
-  if(el.dataset.rt==='1'){if(el.checked)x.rd[id]=1;else delete x.rd[id]}else{const t=x.tasks.find(t=>t.id===id);if(t)t.done=el.checked}commit()},
- addR(){form('New recurring task',[{k:'title',l:'Task title',req:1}],v=>{S.routine.push({id:uid(),title:v.title,from:ymd(new Date()),to:null});commit()})},
- editR(d){const r=rOf(d.id);form('Edit recurring task',[{k:'title',l:'Task title',req:1,v:r.title}],v=>{r.title=v.title;commit()})},
- rtg(el){const r=rOf(el.dataset.id);if(el.checked){r.from=ymd(new Date());r.to=null}else r.to=yest();commit()},
- delR(d){if(confirm('Remove this task from your routine?\nCompletion records on past dates are kept.')){const r=rOf(d.id);r.gone=1;r.to=yest();commit()}},
- upR(d){mv(d.id,-1)},dnR(d){mv(d.id,1)}
+ tgl(el){const t=day(sel).tasks.find(t=>t.id===el.dataset.id);if(t)t.done=el.checked;commit()},
+ addR(){routineForm()},editRoutine(d){routineForm(d.id)},
+ delRoutine(d){if(confirm('Delete this routine item from this date only?')){const x=day(sel);x.routine=x.routine.filter(r=>r.id!==d.id);commit()}},
+ routineToggle(el){const r=day(sel).routine.find(r=>r.id===el.dataset.id);if(r)r.done=el.checked;commit()},
+ addHabit(){habitForm()},editHabit(d){habitForm(d.id)},
+ delHabit(d){if(confirm('Remove this habit from your consistency tracker? This hides it on all dates.')){S.consistencyHabits=S.consistencyHabits.filter(h=>h.id!==d.id);commit()}},
+ habitToggle(el){const x=day(sel);if(el.checked)x.consistency[el.dataset.id]=true;else delete x.consistency[el.dataset.id];commit()},
+ addReminder(){reminderForm()},editReminder(d){reminderForm(d.id)},
+ delReminder(d){if(confirm('Delete this reminder?')){S.reminders=S.reminders.filter(r=>r.id!==d.id);commit()}},
+ jumpReminder(d){const r=S.reminders.find(x=>x.id===d.id);if(r){sel=reminderDate(r,TODAY());view=parse(sel);view.setDate(1);render()}},
 };
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])return A[b.dataset.a](b.dataset);
  const d=e.target.closest('[data-k]');if(d){sel=d.dataset.k;render()}});
@@ -186,4 +263,6 @@ document.addEventListener('change',e=>{const c=e.target.dataset&&e.target.datase
 
 $('#now').textContent=new Date().toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 render();
-</script></body></html>
+</script>
+</body>
+</html>
